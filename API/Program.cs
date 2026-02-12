@@ -17,6 +17,7 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 // transient = scoped to the method level (too soon for repository)
 // scoped = exists through the lifetime of the http request
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // End Services
 
