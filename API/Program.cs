@@ -1,3 +1,4 @@
+using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.config;
 using Infrastructure.Data;
@@ -19,6 +20,9 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+//CORS
+builder.Services.AddCors();
+
 // End Services
 
 // Middleware begin ***
@@ -26,6 +30,12 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
+// placement for CORS is important here
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod()
+                .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
 app.MapControllers();
 
 // seed data
